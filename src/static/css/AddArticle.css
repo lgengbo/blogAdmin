@@ -46,6 +46,10 @@
     padding: 10px 10px 10px 30px; 
     background-color: #f8f8f8;
 }
+
+.show-html img {
+	width: 100%;
+}
 .introduce-html{
     padding:10px;
     border:1px solid #ddd;
@@ -88,6 +92,9 @@
     border-left:4px solid #cbcbcb ;
     padding: 10px 10px 10px 30px; 
     background-color: #f8f8f8;
+}
+.introduce-html img {
+	width: 100%;
 }
 .date-select{
     margin-top:10px;
