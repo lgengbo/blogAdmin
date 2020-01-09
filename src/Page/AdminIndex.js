@@ -1,45 +1,71 @@
 import React, { useState } from 'react'
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Layout, Menu, Breadcrumb, Icon ,Row, Col,Dropdown} from 'antd';
+// import React,{useState,useEffect} from 'react';
+import { Route } from "react-router-dom";
 import '../static/css/AdminIndex.css'
 import AddArticle from './AddArticle'
+import ArticleList from './ArticleList'
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-function AdminIndex() {
+function AdminIndex(props) {
     const [collapsed, setCollapsed] = useState(false)
 
     const onCollapse = collapsed => {
         setCollapsed(collapsed);
     };
-
+	// 文章管理列表跳转
+	const handleClickArticle = (e) =>{
+		if(e.key === 'AddArticle'){
+			props.history.push('/index/add');
+		} else if (e.key === 'ArticleList'){
+			props.history.push('/index/list');
+		}
+	}
+	// 退出登录
+	const logout = () => {
+		props.history.push('/');
+		localStorage.removeItem('openId');
+	}
+	const menu = (
+	  <Menu>
+	    <Menu.Item onClick={logout}>
+	        退出登录
+	    </Menu.Item>
+	  </Menu>
+	);
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
                 <div className="logo" />
                 <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                    <Menu.Item key="1">
-                        <Icon type="pie-chart" />
-                        <span>工作台</span>
-                    </Menu.Item>
-                    <Menu.Item key="2">
-                        <Icon type="desktop" />
-                        <span>添加文字</span>
-                    </Menu.Item>
                     <SubMenu
-                        key="sub1"
+                        key="article"
+						onClick={handleClickArticle}
                         title={
                             <span>
                                 <Icon type="user" />
-                                <span>文字管理</span>
+                                <span>文章管理</span>
                             </span>
                         }
                     >
-                        <Menu.Item key="3">添加文字</Menu.Item>
-                        <Menu.Item key="4">文字列表</Menu.Item>
-                        <Menu.Item key="5">Alex</Menu.Item>
+                        <Menu.Item key="AddArticle">添加文章</Menu.Item>
+                        <Menu.Item key="ArticleList">文章列表</Menu.Item>
                     </SubMenu>
+					<SubMenu
+					    key="system"
+						onClick={handleClickArticle}
+					    title={
+					        <span>
+					            <Icon type="user" />
+					            <span>系统管理</span>
+					        </span>
+					    }
+					>
+					    <Menu.Item key="AddArticle">用户角色</Menu.Item>
+					    <Menu.Item key="ArticleList">用户管理</Menu.Item>
+					</SubMenu>
                     <Menu.Item key="9">
                         <Icon type="file" />
                         <span>留言管理</span>
@@ -48,16 +74,30 @@ function AdminIndex() {
             </Sider>
             <Layout>
                 {/* <Header style={{ background: '#fff', padding: 0 }} /> */}
-                <Content style={{ margin: '0 16px' }}>
-                    <Breadcrumb style={{ margin: '16px 0' }}>
-                        <Breadcrumb.Item>后台管理系统</Breadcrumb.Item>
-                        <Breadcrumb.Item>工作台</Breadcrumb.Item>
-                    </Breadcrumb>
-                    <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+                <Content style={{ margin: '0 16px' }}>,
+				    <Row>
+					<Col span={14}>
+						<Breadcrumb style={{ margin: '16px 0' }}>
+							<Breadcrumb.Item>后台管理系统</Breadcrumb.Item>
+							<Breadcrumb.Item>工作台</Breadcrumb.Item>
+						</Breadcrumb>
+					</Col>
+					<Col span={10} style={{textAlign: 'right',margin: '16px 0px'}}>
+						<Dropdown overlay={menu}>
+						    <a className="ant-dropdown-link" href="#">
+						      admin <Icon type="down" />
+						    </a>
+						  </Dropdown>
+						<label onClick={logout}></label>
+					</Col>
+					</Row>
+                    <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>,
                         <div>
-                            <Router>
-                                <Route path="/index/" exact component={AddArticle}></Route>
-                            </Router>
+						    {/* 注意exact*/}
+							<Route exact path="/index/" component={ArticleList} />
+							<Route exact path="/index/add" component={AddArticle} />
+							<Route exact path="/index/add/:id" component={AddArticle} />
+							<Route exact path="/index/list" component={ArticleList} />
                         </div>
                     </div>
                 </Content>
